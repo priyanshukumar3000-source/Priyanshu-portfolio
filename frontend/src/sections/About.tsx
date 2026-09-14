@@ -5,6 +5,7 @@ import { EXPERIENCE, IMAGES, OWNER, STATS } from "@/data/portfolio";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { TiltCard } from "@/components/TiltCard";
+import { WeaponRain } from "@/components/three/WeaponRain";
 
 const ICONS: Record<string, typeof Code2> = {
   code: Code2,
@@ -35,8 +36,11 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 export function About() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { margin: "-15% 0px -15% 0px" });
+
   return (
-    <section id="about" data-testid="about-section" className="relative py-28 md:py-36">
+    <section ref={sectionRef} id="about" data-testid="about-section" className="relative py-28 md:py-36">
       <div className="mx-auto w-[min(1240px,92vw)]">
         <SectionHeading
           num="01"
@@ -48,6 +52,9 @@ export function About() {
 
         <div className="grid lg:grid-cols-[1fr_1.2fr] gap-14 items-center">
           <Reveal className="relative mx-auto w-[min(380px,80vw)]">
+            <div className="pointer-events-none absolute -inset-x-56 -inset-y-24 z-0 hidden md:block" data-testid="weapon-rain-canvas">
+              <WeaponRain active={inView} />
+            </div>
             <TiltCard max={8} testId="about-portrait-main" className="relative z-10">
               <div className="corner-brackets overflow-hidden rounded-2xl border border-purple-500/30 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
                 <img
