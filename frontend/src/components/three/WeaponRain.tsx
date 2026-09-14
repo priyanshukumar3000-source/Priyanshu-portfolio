@@ -1,5 +1,6 @@
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useMemo, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { MotionValue } from "motion/react";
 import * as THREE from "three";
 
 function easeOutBounce(x: number): number {
@@ -54,6 +55,7 @@ function makeAuraTexture() {
 }
 
 type Vec3 = [number, number, number];
+type MutableNum = React.MutableRefObject<number | null>;
 
 interface DropProps {
   active: boolean;
@@ -66,9 +68,11 @@ function useDropMotion(
   ref: React.RefObject<THREE.Group | null>,
   { active, delay, start, end }: DropProps,
   landedZ: number,
-  idleSpin: number
+  idleSpin: number,
+  impactAt?: MutableNum
 ) {
   const startTime = useRef<number | null>(null);
+  const landed = useRef(false);
   useFrame(({ clock }, d) => {
     const g = ref.current;
     if (!g) return;
@@ -76,6 +80,8 @@ function useDropMotion(
       g.position.set(...start);
       g.visible = false;
       startTime.current = null;
+      landed.current = false;
+      if (impactAt) impactAt.current = null;
       return;
     }
     if (startTime.current === null) startTime.current = clock.elapsedTime;
@@ -90,6 +96,10 @@ function useDropMotion(
       THREE.MathUtils.lerp(start[2], end[2], e)
     );
     if (p >= 1) {
+      if (!landed.current) {
+        landed.current = true;
+        if (impactAt) impactAt.current = clock.elapsedTime;
+      }
       g.rotation.z = THREE.MathUtils.damp(g.rotation.z, landedZ, 4, d);
       g.rotation.y += d * idleSpin;
     } else {
@@ -99,16 +109,106 @@ function useDropMotion(
   });
 }
 
+const DUST_COUNT = 16;
+
+function ImpactEffect({ at, position }: { at: MutableNum; position: Vec3 }) {
+  const ring = useRef<THREE.Mesh>(null);
+  const ringMat = useRef<THREE.MeshBasicMaterial>(null);
+  const pts = useRef<THREE.Points>(null);
+  const ptsMat = useRef<THREE.PointsMaterial>(null);
+  const positions = useMemo(() => new Float32Array(DUST_COUNT * 3), []);
+  const velocities = useMemo(
+    () =>
+      Array.from({ length: DUST_COUNT }, () => ({
+        x: (Math.random() - 0.5) * 3.2,
+        y: Math.random() * 2.4 + 0.6,
+        z: (Math.random() - 0.5) * 1.6,
+      })),
+    []
+  );
+  const firedAt = useRef<number | null>(null);
+
+  useFrame(({ clock }) => {
+    const rm = ringMat.current;
+    const pm = ptsMat.current;
+    const r = ring.current;
+    const p = pts.current;
+    if (!rm || !pm || !r || !p) return;
+    const t0 = at.current;
+    if (t0 === null) {
+      rm.opacity = 0;
+      pm.opacity = 0;
+      return;
+    }
+    const t = clock.elapsedTime - t0;
+    if (t > 0.9) {
+      rm.opacity = 0;
+      pm.opacity = 0;
+      return;
+    }
+    if (firedAt.current !== t0) {
+      firedAt.current = t0;
+      positions.fill(0);
+    }
+    const k = t / 0.9;
+    r.scale.setScalar(0.3 + k * 2.8);
+    rm.opacity = 0.85 * (1 - k);
+    pm.opacity = 0.9 * (1 - k);
+    for (let i = 0; i < velocities.length; i++) {
+      const v = velocities[i];
+      positions[i * 3] = v.x * t;
+      positions[i * 3 + 1] = v.y * t - 2.6 * t * t;
+      positions[i * 3 + 2] = v.z * t;
+    }
+    p.geometry.attributes.position.needsUpdate = true;
+  });
+
+  return (
+    <group position={position}>
+      <mesh ref={ring}>
+        <ringGeometry args={[0.42, 0.54, 40]} />
+        <meshBasicMaterial
+          ref={ringMat}
+          color="#c084fc"
+          transparent
+          opacity={0}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      <points ref={pts}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        </bufferGeometry>
+        <pointsMaterial
+          ref={ptsMat}
+          size={0.12}
+          color="#e9d5ff"
+          transparent
+          opacity={0}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </points>
+    </group>
+  );
+}
+
 function DropStar(props: DropProps & { landedZ: number }) {
   const group = useRef<THREE.Group>(null);
+  const impactAt = useRef<number | null>(null);
   const geo = useMemo(makeStarGeo, []);
-  useDropMotion(group, props, props.landedZ, 0.9);
+  useDropMotion(group, props, props.landedZ, 0.9, impactAt);
   return (
-    <group ref={group}>
-      <mesh geometry={geo} scale={0.72}>
-        <meshStandardMaterial color="#c9c9de" metalness={0.75} roughness={0.3} emissive="#9333ea" emissiveIntensity={0.4} />
-      </mesh>
-    </group>
+    <>
+      <group ref={group}>
+        <mesh geometry={geo} scale={0.72}>
+          <meshStandardMaterial color="#c9c9de" metalness={0.75} roughness={0.3} emissive="#9333ea" emissiveIntensity={0.4} />
+        </mesh>
+      </group>
+      <ImpactEffect at={impactAt} position={props.end} />
+    </>
   );
 }
 
@@ -117,62 +217,134 @@ function DropKatana(props: DropProps) {
   const auraBlade = useRef<THREE.SpriteMaterial>(null);
   const auraGuard = useRef<THREE.SpriteMaterial>(null);
   const auraLight = useRef<THREE.PointLight>(null);
+  const impactAt = useRef<number | null>(null);
   const auraTex = useMemo(makeAuraTexture, []);
-  const progress = useRef(0);
+  const worldPos = useMemo(() => new THREE.Vector3(), []);
+  const mouse = useRef({ x: -9999, y: -9999 });
+  const flare = useRef(0);
+  const { camera, gl } = useThree();
 
-  useDropMotion(group, props, -1.05, 0.3);
+  useDropMotion(group, props, -1.05, 0.3, impactAt);
 
-  useFrame(({ clock }) => {
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      mouse.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  useFrame(({ clock }, d) => {
     const g = group.current;
     if (!g) return;
     const vis = g.visible ? 1 : 0;
+
+    g.getWorldPosition(worldPos);
+    worldPos.y += 1.4;
+    worldPos.project(camera);
+    const rect = gl.domElement.getBoundingClientRect();
+    const sx = rect.left + ((worldPos.x + 1) / 2) * rect.width;
+    const sy = rect.top + ((1 - worldPos.y) / 2) * rect.height;
+    const dist = Math.hypot(mouse.current.x - sx, mouse.current.y - sy);
+    flare.current = THREE.MathUtils.damp(flare.current, dist < 180 ? 1 : 0, 6, d);
+
+    const boost = 1 + flare.current * 1.7;
     const pulse = 0.55 + Math.sin(clock.elapsedTime * 3.2) * 0.25;
-    if (auraBlade.current) auraBlade.current.opacity = pulse * 0.55 * vis;
-    if (auraGuard.current) auraGuard.current.opacity = pulse * 0.8 * vis;
-    if (auraLight.current) auraLight.current.intensity = (14 + Math.sin(clock.elapsedTime * 3.2) * 8) * vis;
-    progress.current = pulse;
+    if (auraBlade.current) auraBlade.current.opacity = pulse * 0.55 * vis * boost;
+    if (auraGuard.current) auraGuard.current.opacity = pulse * 0.8 * vis * boost;
+    if (auraLight.current)
+      auraLight.current.intensity = (14 + Math.sin(clock.elapsedTime * 3.2) * 8) * vis * boost;
   });
 
   return (
-    <group ref={group}>
-      <sprite position={[0, 1.9, -0.15]} scale={[1.7, 5.4, 1]}>
-        <spriteMaterial ref={auraBlade} map={auraTex} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={0} />
-      </sprite>
-      <sprite position={[0, 0.5, -0.1]} scale={[1.4, 1.4, 1]}>
-        <spriteMaterial ref={auraGuard} map={auraTex} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={0} />
-      </sprite>
-      <pointLight ref={auraLight} position={[0, 1.6, 0.6]} color="#a855f7" intensity={0} distance={7} />
-      <mesh position={[0, 1.9, 0]}>
-        <boxGeometry args={[0.055, 2.6, 0.016]} />
-        <meshStandardMaterial color="#e6e9f7" metalness={0.85} roughness={0.2} emissive="#a855f7" emissiveIntensity={0.35} />
-      </mesh>
-      <mesh position={[0.032, 1.9, 0]}>
-        <boxGeometry args={[0.008, 2.6, 0.018]} />
-        <meshBasicMaterial color="#d8b4fe" transparent opacity={0.95} />
-      </mesh>
-      <mesh position={[0, 3.22, 0]} rotation={[0, 0, Math.PI / 4]}>
-        <boxGeometry args={[0.055, 0.08, 0.016]} />
-        <meshStandardMaterial color="#e6e9f7" metalness={0.85} roughness={0.2} emissive="#a855f7" emissiveIntensity={0.3} />
-      </mesh>
-      <mesh position={[0, 0.58, 0]}>
-        <cylinderGeometry args={[0.16, 0.16, 0.035, 24]} />
-        <meshStandardMaterial color="#1c1428" metalness={0.6} roughness={0.4} emissive="#9333ea" emissiveIntensity={0.5} />
-      </mesh>
-      <mesh position={[0, 0.2, 0]}>
-        <cylinderGeometry args={[0.055, 0.06, 0.75, 16]} />
-        <meshStandardMaterial color="#3b1d63" roughness={0.7} />
-      </mesh>
-      {[0.02, 0.2, 0.38].map((y) => (
-        <mesh key={y} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.062, 0.012, 8, 20]} />
-          <meshStandardMaterial color="#c084fc" emissive="#9333ea" emissiveIntensity={0.8} />
+    <>
+      <group ref={group}>
+        <sprite position={[0, 1.9, -0.15]} scale={[1.7, 5.4, 1]}>
+          <spriteMaterial ref={auraBlade} map={auraTex} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={0} />
+        </sprite>
+        <sprite position={[0, 0.5, -0.1]} scale={[1.4, 1.4, 1]}>
+          <spriteMaterial ref={auraGuard} map={auraTex} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={0} />
+        </sprite>
+        <pointLight ref={auraLight} position={[0, 1.6, 0.6]} color="#a855f7" intensity={0} distance={7} />
+        <mesh position={[0, 1.9, 0]}>
+          <boxGeometry args={[0.055, 2.6, 0.016]} />
+          <meshStandardMaterial color="#e6e9f7" metalness={0.85} roughness={0.2} emissive="#a855f7" emissiveIntensity={0.35} />
         </mesh>
-      ))}
-      <mesh position={[0, -0.2, 0]}>
-        <cylinderGeometry args={[0.06, 0.05, 0.08, 16]} />
-        <meshStandardMaterial color="#1c1428" metalness={0.7} roughness={0.3} />
+        <mesh position={[0.032, 1.9, 0]}>
+          <boxGeometry args={[0.008, 2.6, 0.018]} />
+          <meshBasicMaterial color="#d8b4fe" transparent opacity={0.95} />
+        </mesh>
+        <mesh position={[0, 3.22, 0]} rotation={[0, 0, Math.PI / 4]}>
+          <boxGeometry args={[0.055, 0.08, 0.016]} />
+          <meshStandardMaterial color="#e6e9f7" metalness={0.85} roughness={0.2} emissive="#a855f7" emissiveIntensity={0.3} />
+        </mesh>
+        <mesh position={[0, 0.58, 0]}>
+          <cylinderGeometry args={[0.16, 0.16, 0.035, 24]} />
+          <meshStandardMaterial color="#1c1428" metalness={0.6} roughness={0.4} emissive="#9333ea" emissiveIntensity={0.5} />
+        </mesh>
+        <mesh position={[0, 0.2, 0]}>
+          <cylinderGeometry args={[0.055, 0.06, 0.75, 16]} />
+          <meshStandardMaterial color="#3b1d63" roughness={0.7} />
+        </mesh>
+        {[0.02, 0.2, 0.38].map((y) => (
+          <mesh key={y} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.062, 0.012, 8, 20]} />
+            <meshStandardMaterial color="#c084fc" emissive="#9333ea" emissiveIntensity={0.8} />
+          </mesh>
+        ))}
+        <mesh position={[0, -0.2, 0]}>
+          <cylinderGeometry args={[0.06, 0.05, 0.08, 16]} />
+          <meshStandardMaterial color="#1c1428" metalness={0.7} roughness={0.3} />
+        </mesh>
+      </group>
+      <ImpactEffect at={impactAt} position={props.end} />
+    </>
+  );
+}
+
+function OrbitStar({ progress }: { progress: MotionValue<number> }) {
+  const ref = useRef<THREE.Group>(null);
+  const aura = useRef<THREE.SpriteMaterial>(null);
+  const geo = useMemo(makeStarGeo, []);
+  const auraTex = useMemo(makeAuraTexture, []);
+  useFrame(({ clock }, d) => {
+    const g = ref.current;
+    if (!g) return;
+    const a = progress.get() * Math.PI * 3 + clock.elapsedTime * 0.12;
+    const z = Math.sin(a + Math.PI / 3) * 1.6 - 0.4;
+    g.position.set(Math.cos(a) * 4.4, Math.sin(a) * 2.4 - 0.2, z);
+    const depth = THREE.MathUtils.mapLinear(z, -2, 1.2, 0.6, 1.1);
+    g.scale.setScalar(depth);
+    g.rotation.z += d * 4.5;
+    g.rotation.x = Math.sin(clock.elapsedTime * 0.8) * 0.4;
+    if (aura.current) aura.current.opacity = 0.5 + Math.sin(clock.elapsedTime * 2.5) * 0.2;
+  });
+  return (
+    <group ref={ref}>
+      <sprite position={[0, 0, -0.2]} scale={[2.6, 2.6, 1]}>
+        <spriteMaterial ref={aura} map={auraTex} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={0.4} />
+      </sprite>
+      <mesh geometry={geo}>
+        <meshStandardMaterial color="#c9c9de" metalness={0.75} roughness={0.3} emissive="#a855f7" emissiveIntensity={0.5} />
       </mesh>
     </group>
+  );
+}
+
+export function OrbitStarScene({ progress }: { progress: MotionValue<number> }) {
+  const [enabled] = useState(() => window.matchMedia("(min-width: 768px)").matches);
+  if (!enabled) return null;
+  return (
+    <Canvas
+      dpr={[1, 1.5]}
+      camera={{ position: [0, 0, 9], fov: 55 }}
+      gl={{ antialias: true, alpha: true }}
+      style={{ background: "transparent" }}
+    >
+      <ambientLight intensity={0.5} />
+      <pointLight position={[4, 3, 4]} intensity={25} color="#a855f7" />
+      <OrbitStar progress={progress} />
+    </Canvas>
   );
 }
 
