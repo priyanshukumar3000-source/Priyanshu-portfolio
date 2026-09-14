@@ -42,9 +42,14 @@ export function Projects() {
                 </TiltCard>
 
                 <div>
-                  <p className="font-mono text-[11px] tracking-[0.3em] text-cyan-300/80 mb-3">
-                    [{p.index} // {p.kind}]
-                  </p>
+                  <div className="flex items-center gap-3 mb-3">
+                    <p className="font-mono text-[11px] tracking-[0.3em] text-cyan-300/80">
+                      [{p.index} // {p.kind}]
+                    </p>
+                    <span className="rounded-full border border-yellow-400/40 bg-yellow-400/10 px-2.5 py-0.5 font-mono text-[9px] tracking-[0.2em] text-yellow-300">
+                      ★ TOP-RATED BUILD
+                    </span>
+                  </div>
                   <h3 className="font-heading text-3xl md:text-4xl font-extrabold text-white tracking-tight">
                     {p.title}
                   </h3>

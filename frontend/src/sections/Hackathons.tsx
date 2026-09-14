@@ -24,7 +24,7 @@ export function Hackathons() {
           sub="48-hour arenas. No sleep, no excuses — just missions, teamwork and shipped demos."
         />
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 gap-6">
           {HACKATHONS.map((h, i) => {
             const rank = RANK_STYLE[h.rank] ?? RANK_STYLE.PARTICIPANT;
             const Icon = rank.icon;

@@ -15,7 +15,7 @@ export const OWNER = {
 };
 
 export const SOCIALS = [
-  { name: "GitHub", handle: "@priyanshukumar3000", url: "https://github.com/priyanshukumar3000", icon: "github" },
+  { name: "GitHub", handle: "@priyanshukumar3000-source", url: "https://github.com/priyanshukumar3000-source", icon: "github" },
   { name: "LinkedIn", handle: "in/priyanshu-kumar-1a282b203", url: "https://www.linkedin.com/in/priyanshu-kumar-1a282b203", icon: "linkedin" },
   { name: "Email", handle: "priyanshukumar3000@gmail.com", url: "mailto:priyanshukumar3000@gmail.com", icon: "mail" },
 ];
@@ -46,7 +46,8 @@ export const EXPERIENCE = [
 const IMG = "https://static.prod-images.emergentagent.com/jobs/2e3eda51-2c79-42d9-9c7e-9a236e2359c7/images";
 
 export const IMAGES = {
-  heroCharacter: `${IMG}/04572dc44e73a9b2284328e736127ce282d4f2badc54f70b7f135d3284970ed5.jpeg`,
+  heroCharacter:
+    "https://customer-assets-0z36b82j.emergentagent.net/job_2e3eda51-2c79-42d9-9c7e-9a236e2359c7/artifacts/r60woy4k_WhatsApp%20Image%202026-09-15%20at%201.18.01%20AM.jpeg",
   aboutAnime:
     "https://customer-assets-0z36b82j.emergentagent.net/job_2e3eda51-2c79-42d9-9c7e-9a236e2359c7/artifacts/pwhmgist_WhatsApp%20Image%202026-09-15%20at%201.26.24%20AM.jpeg",
   aboutBW:
@@ -59,7 +60,7 @@ export const STATS = [
   { label: "Web Development", value: 15, suffix: "+", note: "Projects shipped", icon: "code" },
   { label: "UI/UX Design", value: 20, suffix: "+", note: "Screens & systems", icon: "pen" },
   { label: "AI & Technology", value: 6, suffix: "+", note: "AI integrations", icon: "cpu" },
-  { label: "Hackathons", value: 3, suffix: "", note: "Arenas cleared", icon: "trophy" },
+  { label: "Hackathons", value: 4, suffix: "", note: "SIH • STC • AISPIRE • UGI", icon: "trophy" },
   { label: "Creative Problem Solving", value: 100, suffix: "%", note: "Always on", icon: "spark" },
 ];
 
@@ -75,50 +76,50 @@ export const SKILL_GROUPS: SkillGroup[] = [
     code: "FRONT_END",
     skills: [
       { name: "HTML", level: 95 },
-      { name: "CSS", level: 92 },
-      { name: "JavaScript", level: 90 },
-      { name: "React", level: 88 },
-      { name: "Tailwind CSS", level: 90 },
+      { name: "CSS", level: 93 },
+      { name: "JavaScript", level: 92 },
+      { name: "React", level: 90 },
+      { name: "Tailwind CSS", level: 94 },
     ],
   },
   {
     name: "Backend",
     code: "BACK_END",
     skills: [
-      { name: "Node.js", level: 84 },
-      { name: "Express", level: 82 },
-      { name: "REST APIs", level: 88 },
-      { name: "Authentication", level: 80 },
-      { name: "Database Integration", level: 83 },
+      { name: "Node.js", level: 62 },
+      { name: "Express", level: 60 },
+      { name: "REST APIs", level: 68 },
+      { name: "Authentication", level: 55 },
+      { name: "Database Integration", level: 60 },
     ],
   },
   {
     name: "Programming",
     code: "LANG_CORE",
     skills: [
-      { name: "Python", level: 86 },
-      { name: "Java", level: 78 },
-      { name: "JavaScript", level: 90 },
+      { name: "Python", level: 75 },
+      { name: "Java", level: 62 },
+      { name: "JavaScript", level: 92 },
     ],
   },
   {
     name: "Design",
     code: "DESIGN_SYS",
     skills: [
-      { name: "Figma", level: 90 },
-      { name: "UI/UX", level: 88 },
-      { name: "Prototyping", level: 85 },
-      { name: "Design Systems", level: 82 },
-      { name: "Canva", level: 92 },
+      { name: "Figma", level: 92 },
+      { name: "UI/UX", level: 90 },
+      { name: "Prototyping", level: 88 },
+      { name: "Design Systems", level: 85 },
+      { name: "Canva", level: 94 },
     ],
   },
   {
     name: "AI & Data",
     code: "AI_DATA",
     skills: [
-      { name: "AI Integration", level: 82 },
-      { name: "Machine Learning", level: 72 },
-      { name: "Data Analytics", level: 75 },
+      { name: "AI Integration", level: 78 },
+      { name: "Machine Learning", level: 58 },
+      { name: "Data Analytics", level: 62 },
     ],
   },
   {
@@ -127,8 +128,8 @@ export const SKILL_GROUPS: SkillGroup[] = [
     skills: [
       { name: "Git", level: 88 },
       { name: "GitHub", level: 90 },
-      { name: "VS Code", level: 94 },
-      { name: "Vercel", level: 86 },
+      { name: "VS Code", level: 95 },
+      { name: "Vercel", level: 90 },
     ],
   },
 ];
@@ -184,23 +185,23 @@ export const PROJECTS: Project[] = [
   {
     id: "healthguard",
     index: "01",
-    title: "HealthGuard",
+    title: "HealthGuard Rural",
     kind: "HEALTH-TECH PLATFORM",
-    tagline: "Care, engineered for everyone.",
+    tagline: "Smarter Triage. Faster Care.",
     problem:
-      "Rural and busy urban patients struggle to track vitals, find the right care, and keep medical history in one place.",
+      "Rural communities face long queues, late triage and limited access to doctors — primary health centres are overwhelmed and patients travel far for basic care.",
     solution:
-      "A healthcare-focused web platform that centralizes vitals tracking, appointments and health records behind one calm, accessible interface.",
+      "AI-assisted symptom triage, smart PHC queues and secure teleconsultation designed for rural communities — privacy-focused, easy to understand and low-bandwidth ready.",
     features: [
-      "Real-time vitals dashboard with trend graphs",
-      "Doctor discovery & appointment scheduling",
-      "Secure digital health records",
-      "Symptom-aware guidance powered by AI",
+      "AI symptom checker with guided assessment & risk indicator",
+      "Live digital-token queues for PHC visits",
+      "Doctor availability with one-tap teleconsultation",
+      "Multilingual interface (English / हिन्दी) + low-data mode",
     ],
-    tech: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS", "REST API"],
+    tech: ["React", "JavaScript", "Tailwind CSS", "AI Integration", "REST API", "Vercel"],
     image: IMAGES.healthguard,
-    demo: "#",
-    code: "https://github.com/priyanshukumar",
+    demo: "https://healthguard-rural.vercel.app",
+    code: "https://github.com/priyanshukumar3000-source",
     caseStudy: "#",
   },
   {
@@ -222,43 +223,56 @@ export const PROJECTS: Project[] = [
     tech: ["Figma", "UI/UX", "Prototyping", "Design Systems", "React"],
     image: IMAGES.huguen,
     demo: "#",
-    code: "https://github.com/priyanshukumar",
+    code: "https://github.com/priyanshukumar3000-source",
     caseStudy: "#",
   },
 ];
 
-// Sample hackathon entries — swap in your real events & results
 export const HACKATHONS = [
   {
-    rank: "FINALIST",
+    rank: "PARTICIPANT",
     event: "Smart India Hackathon",
     year: "2025",
-    project: "HealthGuard",
-    team: "Team of 4 · Full-Stack + Design",
+    project: "HealthGuard Rural",
+    team: "Team Entry · Full-Stack + Design",
     mission:
-      "Build an accessible health-tech platform for underserved communities in 36 hours.",
-    achievement: "Pitched a working full-stack prototype with live vitals dashboard to the finals panel.",
-    level: 86,
-  },
-  {
-    rank: "TOP 10",
-    event: "Inter-College Code Sprint",
-    year: "2025",
-    project: "Campus Connect",
-    team: "Team of 3 · Frontend Lead",
-    mission: "Solve one real campus problem with a shippable web app, overnight.",
-    achievement: "Led UI architecture and shipped a realtime notice-board app used in the demo by judges.",
-    level: 72,
+      "36 hours to prototype AI-assisted triage and smart PHC queues for rural healthcare.",
+    achievement:
+      "Built and pitched the HealthGuard Rural prototype — AI symptom checker, risk indicator and live queue tokens.",
+    level: 88,
   },
   {
     rank: "PARTICIPANT",
-    event: "AI Builders Hack",
+    event: "AISPIRE UP Hackathon",
+    year: "2025",
+    project: "AI Prototype",
+    team: "Team Entry · Frontend + AI Integration",
+    mission: "Build an AI-powered solution for a state-level problem statement under sprint pressure.",
+    achievement:
+      "Integrated an AI pipeline into a working web demo and presented it to the judging panel.",
+    level: 76,
+  },
+  {
+    rank: "PARTICIPANT",
+    event: "STC Hackathon",
+    year: "2025",
+    project: "Sprint Build",
+    team: "Team Entry · Design + Frontend Lead",
+    mission: "Rapid-prototype a shippable product from problem statement to demo, overnight.",
+    achievement:
+      "Designed the full UI system and shipped the frontend demo within the deadline.",
+    level: 70,
+  },
+  {
+    rank: "PARTICIPANT",
+    event: "United Group Hackathon",
     year: "2026",
-    project: "Vision Assist",
-    team: "Solo · Design + ML Integration",
-    mission: "Prototype an AI-powered accessibility tool in 24 hours.",
-    achievement: "Integrated a vision model with a voice-first interface and shipped a working demo solo.",
-    level: 64,
+    project: "Campus Quest",
+    team: "College Arena · United Group of Institutions",
+    mission: "Intra-college arena: solve a campus-scale problem against senior teams.",
+    achievement:
+      "Led design and frontend; shipped a polished demo and earned valuable arena XP on home turf.",
+    level: 66,
   },
 ];
 
@@ -318,17 +332,18 @@ export const TERMINAL_COMMANDS: Record<string, string[]> = {
     "  contact     → open a channel",
     "  sudo hire   → initiate recruitment protocol",
     "  clear       → wipe the terminal",
+    "  ???         → some jutsu need a secret code: ↑ ↑ ↓ ↓ ← → ← → B A",
   ],
-  whoami: ["B.Tech CSE student • Full-Stack Developer + Designer"],
-  skills: ["React • JavaScript • Python • UI/UX • AI"],
+  whoami: ["B.Tech CSE student • Web Developer + UI/UX Designer"],
+  skills: ["React • JavaScript • Tailwind • UI/UX • Figma • AI-curious"],
   mission: ["Build meaningful digital experiences."],
   experience: [
     "UI/UX Design Intern — Finsentsis OS Pvt Ltd",
     "Web Developer Intern — Averisix Solution",
-    "3 hackathons cleared • more quests incoming",
+    "4 hackathons entered • SIH • STC • AISPIRE UP • United Group",
   ],
-  projects: ["[01] HealthGuard — health-tech platform", "[02] Huguen — hotel booking UI/UX", "→ scroll to PROJECTS for the full showcase"],
-  contact: ["email → priyanshukumar3000@gmail.com", "github → github.com/priyanshukumar3000", "or use the transmission form below ↓"],
+  projects: ["[01] HealthGuard Rural — live @ healthguard-rural.vercel.app", "[02] Huguen — hotel booking UI/UX", "→ scroll to PROJECTS for the full showcase"],
+  contact: ["email → priyanshukumar3000@gmail.com", "github → github.com/priyanshukumar3000-source", "or use the transmission form below ↓"],
   "sudo hire": [
     "[sudo] password for recruiter: ********",
     "ACCESS GRANTED ✦",

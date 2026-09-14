@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, Volume2, VolumeX, X } from "lucide-react";
 import { NAV_LINKS } from "@/data/portfolio";
@@ -34,6 +34,17 @@ export function Navbar() {
     scrollToSection(id);
   };
 
+  const logoClicks = useRef<number[]>([]);
+  const onLogoClick = () => {
+    const now = Date.now();
+    logoClicks.current = [...logoClicks.current.filter((t) => now - t < 2000), now];
+    if (logoClicks.current.length >= 5) {
+      logoClicks.current = [];
+      window.dispatchEvent(new Event("sakura-storm"));
+    }
+    go("home");
+  };
+
   return (
     <>
       <motion.header
@@ -49,10 +60,10 @@ export function Navbar() {
         <nav className="flex items-center justify-between gap-4">
           <button
             data-testid="nav-logo"
-            onClick={() => go("home")}
+            onClick={onLogoClick}
             className="font-heading font-extrabold tracking-tight text-white text-sm sm:text-base"
           >
-            PK<span className="text-purple-400">://</span>EVOLVE
+            PK<span className="text-purple-400">://</span>EVOLVEX
             <span className="ml-1.5 text-purple-500/50 text-xs align-middle">忍</span>
           </button>
 

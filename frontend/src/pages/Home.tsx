@@ -7,6 +7,7 @@ import { Marquee } from "@/components/Marquee";
 import { CustomCursor } from "@/components/CustomCursor";
 import { EmberField } from "@/components/EmberField";
 import { ShurikenDivider } from "@/components/ShurikenDivider";
+import { SakuraStormGate } from "@/components/SakuraStormGate";
 import { Hero } from "@/sections/Hero";
 import { About } from "@/sections/About";
 import { Skills } from "@/sections/Skills";
@@ -27,6 +28,7 @@ export default function Home() {
       <div className="noise-overlay" />
       <CustomCursor />
       <EmberField />
+      <SakuraStormGate />
       <AnimatePresence>
         {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       </AnimatePresence>
@@ -51,7 +53,7 @@ export default function Home() {
       <footer className="border-t border-purple-500/15 py-10">
         <div className="mx-auto flex w-[min(1240px,92vw)] flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="font-heading text-sm font-bold tracking-tight text-white">
-            PK<span className="text-purple-400">://</span>EVOLVE
+            PK<span className="text-purple-400">://</span>EVOLVEX
           </p>
           <p className="font-mono text-[10px] tracking-[0.25em] text-purple-400/50 text-center">
             DESIGNED & BUILT BY PRIYANSHU KUMAR — © 2026

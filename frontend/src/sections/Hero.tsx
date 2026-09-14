@@ -141,7 +141,7 @@ export function Hero() {
           <div className="corner-brackets relative overflow-hidden rounded-2xl border border-purple-500/30 shadow-[0_0_60px_rgba(147,51,234,0.35)]">
             <img
               src={IMAGES.heroCharacter}
-              alt="Anime-style portrait of Priyanshu Kumar, a futuristic developer in neon-lit techwear"
+              alt="Priyanshu Kumar in a neon-outlined blazer taking a mirror selfie"
               className="w-full aspect-[3/4] object-cover"
               loading="eager"
             />
