@@ -1,0 +1,264 @@
+{
+  "theme": "dark",
+  "project_name": "Priyanshu Kumar — Cyber-Anime Creative Technologist Portfolio",
+  "archetype": "ARCHETYPE 7 & ARCHETYPE 5 Hybrid: Deep Void Obsidian + Electric Neon Purple / Cyber Violet HUD",
+  "colors": {
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#08060e",
+        "on_bg": "#f3f0fc",
+        "on_bg_muted": "#a79ebd",
+        "roles": {
+          "link": "#c084fc",
+          "error": "#f87171",
+          "success": "#4ade80",
+          "warning": "#facc15"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#120d24",
+        "on_bg": "#f5f3ff",
+        "on_bg_muted": "#b4a9d4",
+        "roles": {
+          "link": "#d8b4fe",
+          "border": "#2e2154",
+          "hover_border": "#a855f7"
+        }
+      },
+      {
+        "name": "inverse",
+        "kind": "solid",
+        "bg": "#f5f3ff",
+        "on_bg": "#0c0817",
+        "on_bg_muted": "#3b2d54"
+      },
+      {
+        "name": "hero",
+        "kind": "gradient",
+        "contrast_against": "#08060e",
+        "guarantee": "scrim: radial-gradient(circle at 50% 30%, rgba(168, 85, 247, 0.12), transparent 70%), linear-gradient(180deg, rgba(8,6,14,0.4) 0%, #08060e 100%)",
+        "on_bg": "#ffffff",
+        "on_bg_muted": "#c4b5fd",
+        "roles": {
+          "link": "#c084fc",
+          "error": "#f87171",
+          "success": "#34d399",
+          "neon_glow": "#a855f7"
+        }
+      },
+      {
+        "name": "glass_hud",
+        "kind": "glass",
+        "contrast_against": "#0c091a",
+        "guarantee": "backdrop-blur-xl bg-[#130d2a]/80 border border-purple-500/25 shadow-[0_8px_32px_rgba(168,85,247,0.15)]",
+        "on_bg": "#f8f7ff",
+        "on_bg_muted": "#b9a9df",
+        "roles": {
+          "accent_badge": "#c084fc"
+        }
+      },
+      {
+        "name": "terminal_card",
+        "kind": "solid",
+        "bg": "#090514",
+        "on_bg": "#a7f3d0",
+        "on_bg_muted": "#93c5fd",
+        "roles": {
+          "prompt": "#ec4899",
+          "output": "#e2e8f0",
+          "keyword": "#c084fc"
+        }
+      }
+    ],
+    "accent": "#9333ea",
+    "on_accent": "#ffffff",
+    "secondary_accent": "#06b6d4",
+    "glow_cyan": "#22d3ee",
+    "glow_purple": "#c084fc"
+  },
+  "typography": {
+    "font_heading": "'Space Grotesk Variable', sans-serif",
+    "font_body": "'DM Sans Variable', sans-serif",
+    "font_mono": "'JetBrains Mono Variable', monospace",
+    "scale_px": {
+      "display": 60,
+      "h1": 48,
+      "h2": 36,
+      "h3": 24,
+      "body": 16,
+      "caption": 14
+    },
+    "typesetting": {
+      "headlines": "tracking-tight font-extrabold uppercase leading-none",
+      "overlines": "text-xs font-mono uppercase tracking-[0.25em] text-purple-400/90",
+      "body": "leading-relaxed text-purple-200/80 font-normal",
+      "code": "font-mono text-sm leading-relaxed"
+    }
+  },
+  "entry_surfaces": {
+    "/": "cinematic hero — cyberpunk anime protagonist canvas with floating neon data glyphs right, bold layered typography + kinetic CTAs left, live audio/status controls header"
+  },
+  "image_urls": {
+    "hero_character_avatar": {
+      "url": "https://images.unsplash.com/photo-1654110455429-cf322b40a906?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwyfHx5b3VuZyUyMGRldmVsb3BlciUyMHBvcnRyYWl0JTIwZ2xhc3Nlc3xlbnwwfHx8fDE3ODk0MjM2NTF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Priyanshu Kumar protagonist portrait representation: Young developer with dark wavy hair and glasses, techwear aesthetic with neon rim glow treatment",
+      "category": "hero_and_about"
+    },
+    "about_developer_portrait": {
+      "url": "https://images.unsplash.com/photo-1566753323558-f4e0952af115?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwxfHx5b3VuZyUyMGRldmVsb3BlciUyMHBvcnRyYWl0JTIwZ2xhc3Nlc3xlbnwwfHx8fDE3ODk0MjM2NTF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Priyanshu personal photos in About section with glasses and focused creative persona",
+      "category": "about_section"
+    },
+    "cyber_city_backdrop": {
+      "url": "https://images.unsplash.com/photo-1648565726114-cfb73eb46340?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjh8MHwxfHNlYXJjaHwyfHxmdXR1cmlzdGljJTIwbmVvbiUyMGFuaW1lJTIwdGVjaCUyMGNpdHl8ZW58MHx8fHwxNzg5NDIzNjUxfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Futuristic purple neon cyber grid backdrop texture for cards and hackathon timeline",
+      "category": "background_texture"
+    },
+    "design_showcase_1": {
+      "url": "https://images.unsplash.com/photo-1760008486593-a85315610136?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwyfHxjcmVhdGl2ZSUyMHVpJTIwdXglMjBtb2Rlcm4lMjB3ZWIlMjBkYXNoYm9hcmQlMjBtb2NrdXB8ZW58MHx8fHwxNzg5NDIzNjUxfDA&ixlib=rb-4.1.0&q=85",
+      "description": "3D spatial UI/UX dashboard system showcase mockup",
+      "category": "designer_showcase"
+    },
+    "design_showcase_2": {
+      "url": "https://images.unsplash.com/photo-1777503810475-54815aae2cb4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwxfHxjcmVhdGl2ZSUyMHVpJTIwdXglMjBtb2Rlcm4lMjB3ZWIlMjBkYXNoYm9hcmQlMjBtb2NrdXB8ZW58MHx8fHwxNzg5NDIzNjUxfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Purple dark mode web interface system and design kit showcase",
+      "category": "designer_showcase"
+    },
+    "design_showcase_3": {
+      "url": "https://images.unsplash.com/photo-1621111848501-8d3634f82336?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHw0fHxjcmVhdGl2ZSUyMHVpJTIwdXglMjBtb2Rlcm4lMjB3ZWIlMjBkYXNoYm9hcmQlMjBtb2NrdXB8ZW58MHx8fHwxNzg5NDIzNjUxfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Minimal studio workspace design workstation mockup",
+      "category": "designer_showcase"
+    }
+  },
+  "visual_enhancers": {
+    "grain_overlay": "CSS SVG feTurbulence subtle 0.03 opacity overlay to avoid flat digital rendering",
+    "tracing_beam": "Animated neon purple & cyan border gradient stroke tracing on active cards",
+    "anime_hud_accents": "Tactical corner brackets (L-shapes in corners), coordinate pills (e.g., [SEC_01 // LVL.99]), Japanese katakana subtitle accents (クリエイティブ・テクノロジスト), and neon status dots",
+    "glassmorphism": "Apple Crystal style: bg-[#120c29]/75 backdrop-blur-2xl border border-purple-500/20 shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
+  },
+  "sections_breakdown": {
+    "loading_screen": {
+      "tagline": "INITIALIZING PORTFOLIO... DESIGN → CODE → CREATE → EVOLVE → WELCOME TO MY WORLD",
+      "features": ["Cyber booting progress bar", "Hacking typewriter logs", "Anime power level gauge", "Auto-dismiss or Skip button"]
+    },
+    "navbar": {
+      "style": "Floating glass pill with purple neon rim",
+      "elements": ["Brand logo (PK // EVOLVE)", "Nav links: [01 About, 02 Skills, 03 Design, 04 Projects, 05 Hackathons, 06 Journey, 07 Terminal, 08 Contact]", "Audio FX Toggle (SFX/BGM cyber ambience with Web Audio API synthesizer chimes)", "Developer Mode quick toggle", "Status Badge (Available for high-impact roles)"]
+    },
+    "hero": {
+      "h1": "I DESIGN. I BUILD. I EVOLVE.",
+      "sub": "Priyanshu Kumar — Full-Stack Engineer, UI/UX Architect & Creative Technologist crafting high-octane digital experiences.",
+      "visuals": ["Interactive 3D Canvas / anime protagonist avatar with particle nebula", "Kinetic text reveal with masked lines", "Floating HUD badges with live stats", "Primary CTAs: 'Explore Projects' (glowing pill) & 'Launch Terminal' (outlined cyber button)"]
+    },
+    "about": {
+      "title": "ARCHITECT OF THE DIGITAL UNIVERSE",
+      "tag": "WHO_AM_I // SYS_INFO",
+      "content": "Merging ruthless engineering discipline with cinematic aesthetic craft. Solving complex distributed architecture while obsessing over micro-interactions at 60fps.",
+      "stats": [
+        {"label": "Production Apps Built", "value": "24+", "suffix": "Shipped"},
+        {"label": "Hackathon Wins & Finalist", "value": "12", "suffix": "Trophies"},
+        {"label": "Design Systems Crafted", "value": "15+", "suffix": "Tokens & Kits"},
+        {"label": "Lines of Clean TS/Py Code", "value": "350k+", "suffix": "Commits"}
+      ]
+    },
+    "skills_constellation": {
+      "title": "NEURAL SKILL MATRIX",
+      "categories": [
+        {"name": "Frontend & Creative Tech", "skills": ["React 19", "Next.js", "TypeScript", "Three.js / R3F", "Tailwind CSS", "Framer Motion", "GSAP / Canvas", "WebGL Shaders"]},
+        {"name": "Backend & Cloud Architecture", "skills": ["Python / FastAPI", "Node.js / Hono", "PostgreSQL", "MongoDB", "Redis", "Docker / K8s", "AWS / Cloudflare", "GraphQL / REST"]},
+        {"name": "UI/UX & Creative Direction", "skills": ["Figma Prototyping", "Design Systems", "Design Tokens", "3D Modeling", "Motion Design", "Information Architecture", "Spatial Interfaces"]},
+        {"name": "AI & Advanced Systems", "skills": ["LLM Agent Workflows", "Vector Embeddings", "LangChain", "Prompt Engineering", "WebSockets / Realtime", "Performance Tuning"]}
+      ],
+      "interactive_mode": "Interactive 3D Skill Sphere / Filterable Matrix with glowing power indicators"
+    },
+    "designer_showcase": {
+      "title": "DESIGNING BEFORE I DEVELOP",
+      "subtitle": "Engineering without empathetic design is cold logic. Design without robust code is an illusion.",
+      "items": [
+        {"title": "Aetherium Design System", "desc": "A hyper-dense dark glass spatial token system for Web3 trading terminals", "badge": "Figma + Tokens", "image_key": "design_showcase_1"},
+        {"title": "CyberHUD Mobile Operating System", "desc": "Futuristic tactile anime-inspired mobile UI concept with adaptive lighting", "badge": "Spatial UI", "image_key": "design_showcase_2"},
+        {"title": "Kairo Studio Architecture", "desc": "Minimalist brutalist portfolio kit crafted for high-end architects", "badge": "Editorial Web", "image_key": "design_showcase_3"}
+      ]
+    },
+    "projects": {
+      "title": "THINGS I'VE BUILT",
+      "projects_data": [
+        {"id": "nexus-ai", "title": "NexusAI // Autonomous Multi-Agent Canvas", "desc": "Interactive node-based workspace coordinating real-time LLM agents with live Python execution sandboxes and vector memory.", "tags": ["React 19", "FastAPI", "MongoDB", "WebSockets", "Three.js"], "badge": "Featured", "github": "https://github.com/priyanshu-k/nexus-ai", "live": "https://nexus-ai.demo.app", "stats": "4.2k Stars • 99.9% Uptime"},
+        {"id": "chronos-terminal", "title": "Chronos // Real-Time Crypto & DeFi HUD", "desc": "Ultra-low latency institutional trading interface with animated candlestick WebGL shaders and custom order routing.", "tags": ["TypeScript", "Rust/Wasm", "TailwindCSS", "Recharts", "Solana"], "badge": "High Frequency", "github": "https://github.com/priyanshu-k/chronos-hud", "live": "https://chronos.demo.app", "stats": "<12ms Latency"},
+        {"id": "zenith-ui", "title": "Zenith UI // Accessible Neo-Anime Component Library", "desc": "Open-source headless component system paired with animated neon physics springs for modern TypeScript applications.", "tags": ["React", "Radix UI", "Tailwind v4", "NPM Package"], "badge": "Open Source", "github": "https://github.com/priyanshu-k/zenith-ui", "live": "https://zenith-ui.demo.app", "stats": "28k Monthly Downloads"},
+        {"id": "pulse-flow", "title": "PulseFlow // Biometric Dev Productivity Tracker", "desc": "Smart IDE telemetry and developer flow-state analyzer that auto-adjusts audio playlists and blocks distracting feeds.", "tags": ["Electron", "Python", "FastAPI", "Tailwind CSS"], "badge": "AI Productivity", "github": "https://github.com/priyanshu-k/pulseflow", "live": "https://pulseflow.demo.app", "stats": "Top 10 ProductHunt"}
+      ]
+    },
+    "hackathons": {
+      "title": "BUILT UNDER PRESSURE",
+      "subtitle": "48-Hour High-Stakes Arenas. Mission Accomplished.",
+      "items": [
+        {"rank": "1st Place Winner", "event": "Global CyberHack 2025", "project": "NeuroLink VR Interface", "achievement": "Built full-body WebXR gesture control for remote cloud clusters under 36 hours.", "badge": "Grand Champion"},
+        {"rank": "Best UI/UX Design", "event": "ETH India Genesis", "project": "HyperVault Security", "achievement": "Architected zero-knowledge biometric authentication mobile client.", "badge": "Design Gold"},
+        {"rank": "Top 3 Finalist", "event": "AI Nexus Global Hack", "project": "Synapse Code Co-Pilot", "achievement": "Built multi-agent auto-debugging terminal plugin with instant PR generation.", "badge": "Finalist"}
+      ]
+    },
+    "journey": {
+      "title": "PROTAGONIST JOURNEY",
+      "stages": [
+        {"phase": "LEVEL 01", "name": "LEARN", "years": "2021", "desc": "Discovered computer science. Mastered data structures, algorithms, and fundamental computer graphics principles."},
+        {"phase": "LEVEL 02", "name": "DESIGN", "years": "2022", "desc": "Obsessed over visual psychology, typography, Figma mastery, and Swiss grid systems."},
+        {"phase": "LEVEL 03", "name": "BUILD", "years": "2023", "desc": "Engineered full-stack applications, scalable APIs, and distributed real-time microservices."},
+        {"phase": "LEVEL 04", "name": "COMPETE", "years": "2024", "desc": "Dominated 10+ hackathons across national and global arenas under brutal 48-hour sprints."},
+        {"phase": "LEVEL 05", "name": "IMPROVE", "years": "2025", "desc": "Pioneered creative WebGL shaders, 3D Canvas immersion, and AI agent architectures."},
+        {"phase": "LEVEL 06", "name": "EVOLVE", "years": "PRESENT", "desc": "Crafting next-generation digital products at the intersection of aesthetics, code, and intelligence."}
+      ]
+    },
+    "developer_terminal": {
+      "title": "MY DEVELOPER MODE // INTERACTIVE CLI",
+      "commands": [
+        {"cmd": "help", "output": "Available commands: bio, skills, stack, contact, clear, sudo hire, matrix, stats, easteregg"},
+        {"cmd": "bio", "output": "Priyanshu Kumar: Full-Stack Engineer & UI/UX Architect. Specializing in high-performance web systems and cinematic digital interfaces."},
+        {"cmd": "stack", "output": "Core: React 19, TypeScript, Python/FastAPI, Next.js, Three.js, Tailwind v4, MongoDB, PostgreSQL, Redis, Docker."},
+        {"cmd": "sudo hire", "output": "ACCESS GRANTED: Status: Ready for high-impact engineering & design opportunities. Initializing contact handshake..."}
+      ]
+    },
+    "contact": {
+      "title": "LET'S BUILD SOMETHING EXTRAORDINARY",
+      "subtitle": "Have a groundbreaking project, mission-critical product, or want to collaborate? Transmit your signal below.",
+      "form_fields": ["Agent Name / Studio", "Transmission Frequency (Email)", "Mission Type (Full-Stack / UI-UX / 3D / Advisory)", "Project Brief"],
+      "socials": [
+        {"name": "GitHub", "handle": "@priyanshu-k", "url": "https://github.com"},
+        {"name": "LinkedIn", "handle": "in/priyanshu-kumar", "url": "https://linkedin.com"},
+        {"name": "X / Twitter", "handle": "@priyanshu_dev", "url": "https://x.com"},
+        {"name": "Discord", "handle": "priyanshu#0001", "url": "https://discord.com"}
+      ]
+    }
+  },
+  "motion": {
+    "engine": "Framer Motion (motion/react bundled) + Lenis smooth scrolling",
+    "stagger_delay": 0.08,
+    "hover_transition": "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease",
+    "scroll_reveal": {
+      "initial": { "opacity": 0, "y": 30 },
+      "whileInView": { "opacity": 1, "y": 0 },
+      "viewport": { "once": true, "margin": "-100px" },
+      "transition": { "duration": 0.6, "ease": [0.22, 1, 0.36, 1] }
+    }
+  },
+  "accessibility": {
+    "wcag_target": "WCAG AA (4.5:1 text contrast on all surfaces)",
+    "prefers_reduced_motion": "Wrap animations with prefers-reduced-motion fallback disabling heavy transforms",
+    "interactive_data_testids": "Mandatory data-testid on every button, link, terminal input, tab, contact form field, and card",
+    "focus_states": "focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none ring-offset-2 ring-offset-[#08060e]"
+  },
+  "instructions_to_main_agent": [
+    "Follow this exact dark cyberpunk-anime aesthetic: Deep Void (#08060e), panel (#120d24), neon purple accents (#c084fc, #9333ea), and cyan highlights (#06b6d4).",
+    "Import fonts: Space Grotesk for Headings, DM Sans for Body, JetBrains Mono for Code/HUD in frontend/src/index.css.",
+    "Build a rich, comprehensive single-page portfolio with smooth navigation between all requested sections: Hero, About, Skills Matrix, Design Showcase, Projects, Hackathons, Journey Timeline, Interactive Terminal, Contact, and Audio SFX toggle.",
+    "Implement the Interactive Terminal with active typing input, command history, and custom responses (help, bio, stack, contact, clear, sudo hire, matrix).",
+    "Include sound toggle with simulated Web Audio API futuristic cyber chimes/beeps on clicks (off by default, can be toggled on).",
+    "Ensure all interactive elements have data-testid attributes for testing (e.g. data-testid='hero-cta-projects', data-testid='terminal-input', data-testid='contact-submit-button', data-testid='audio-toggle-btn').",
+    "Implement the animated Stat Counters in the About section and Hackathon mission progression cards with visual ranking badges.",
+    "Do NOT use generic templates; provide high-craft anime HUD details like coordinate badges, cyberpunk scanlines, and animated particle canvas in the Hero section."
+  ]
+}
