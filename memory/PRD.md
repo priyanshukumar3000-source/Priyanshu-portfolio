@@ -22,6 +22,9 @@ Premium, highly interactive 3D personal portfolio presenting Priyanshu Kumar as 
 - Verified: typecheck clean, API smoke (POST persists, GET lists, 422 negative), full browser pass incl. mobile 390px
 
 ## Backlog
-- P0: Replace placeholder social links/email in portfolio.ts with real ones; real hackathon entries; real project demo/case-study URLs
-- P1: Project case-study detail pages; resume/CV download
+- P0: Real hackathon event names/results (3 confirmed); real project demo/case-study URLs
+- P1: Project case-study detail pages; resume/CV download; Instagram link if wanted
 - P2: BGM ambient loop option; blog/guestbook; WebGL shader hero variant; i18n (JP accents)
+
+## Iteration log
+- 2026-09-14 (v2): Real identity wired (email, GitHub, LinkedIn, B.Tech CSE bio, 2 internships, 3 hackathons). Shinobi FX pack: 3D spinning shuriken + pulsing energy orbs in hero scene, site-wide rising ember canvas, custom neon cursor with spring ring, kanji watermarks per section (忍技美創闘道端絆), spinning shuriken dividers, new `experience` terminal command. Typecheck + browser pass clean.

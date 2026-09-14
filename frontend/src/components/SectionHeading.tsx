@@ -8,9 +8,23 @@ interface SectionHeadingProps {
   jp?: string;
 }
 
+const KANJI: Record<string, string> = {
+  WHO_AM_I: "忍",
+  SKILL_MATRIX: "技",
+  DESIGN_FIRST: "美",
+  DEPLOYED_WORLDS: "創",
+  PRESSURE_MODE: "闘",
+  PROTAGONIST_PATH: "道",
+  SHELL_ACCESS: "端",
+  OPEN_CHANNEL: "絆",
+};
+
 export function SectionHeading({ num, code, title, sub, jp }: SectionHeadingProps) {
   return (
-    <div className="mb-14 md:mb-20" data-testid={`section-heading-${code.toLowerCase()}`}>
+    <div className="relative mb-14 md:mb-20" data-testid={`section-heading-${code.toLowerCase()}`}>
+      <span aria-hidden="true" className="kanji-watermark">
+        {KANJI[code] ?? "忍"}
+      </span>
       <Reveal>
         <div className="flex items-center gap-4 mb-5">
           <span className="font-mono text-xs tracking-[0.3em] text-purple-400/90">

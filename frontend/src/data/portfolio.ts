@@ -11,15 +11,36 @@ export const OWNER = {
   tagline:
     "Building immersive digital experiences by combining code, design, and emerging technology.",
   intro:
-    "I'm a Computer Science Engineering student and passionate developer focused on Full-Stack Web Development, UI/UX Design, and AI-powered solutions. I enjoy turning ideas into practical, user-friendly digital products.",
+    "I'm a B.Tech Computer Science Engineering student and passionate developer focused on Full-Stack Web Development, UI/UX Design, and AI-powered solutions. I've trained in the field through two internships — UI/UX Design at Finsentsis OS and Web Development at Averisix Solution — and I enjoy turning ideas into practical, user-friendly digital products.",
 };
 
-// ⚠️ PLACEHOLDER LINKS — replace with your real profiles
 export const SOCIALS = [
-  { name: "GitHub", handle: "@priyanshukumar", url: "https://github.com/priyanshukumar", icon: "github" },
-  { name: "LinkedIn", handle: "in/priyanshukumar", url: "https://linkedin.com/in/priyanshukumar", icon: "linkedin" },
-  { name: "Instagram", handle: "@priyanshu.codes", url: "https://instagram.com/priyanshukumar", icon: "instagram" },
-  { name: "Email", handle: "priyanshu.dev@gmail.com", url: "mailto:priyanshu.dev@gmail.com", icon: "mail" },
+  { name: "GitHub", handle: "@priyanshukumar3000", url: "https://github.com/priyanshukumar3000", icon: "github" },
+  { name: "LinkedIn", handle: "in/priyanshu-kumar-1a282b203", url: "https://www.linkedin.com/in/priyanshu-kumar-1a282b203", icon: "linkedin" },
+  { name: "Email", handle: "priyanshukumar3000@gmail.com", url: "mailto:priyanshukumar3000@gmail.com", icon: "mail" },
+];
+
+export const EXPERIENCE = [
+  {
+    role: "UI/UX Design Intern",
+    company: "Finsentsis OS Pvt Ltd",
+    kind: "DESIGN_GUILD",
+    points: [
+      "Designed product interfaces and interactive prototypes in Figma",
+      "Crafted design-system components and developer handoff specs",
+    ],
+    tags: ["Figma", "UI/UX", "Prototyping", "Design Systems"],
+  },
+  {
+    role: "Web Developer Intern",
+    company: "Averisix Solution",
+    kind: "DEV_GUILD",
+    points: [
+      "Built and shipped responsive, production web features",
+      "Integrated frontends with REST APIs and real data flows",
+    ],
+    tags: ["React", "JavaScript", "REST APIs", "Tailwind CSS"],
+  },
 ];
 
 const IMG = "https://static.prod-images.emergentagent.com/jobs/2e3eda51-2c79-42d9-9c7e-9a236e2359c7/images";
@@ -38,7 +59,7 @@ export const STATS = [
   { label: "Web Development", value: 15, suffix: "+", note: "Projects shipped", icon: "code" },
   { label: "UI/UX Design", value: 20, suffix: "+", note: "Screens & systems", icon: "pen" },
   { label: "AI & Technology", value: 6, suffix: "+", note: "AI integrations", icon: "cpu" },
-  { label: "Hackathons", value: 8, suffix: "+", note: "Arenas entered", icon: "trophy" },
+  { label: "Hackathons", value: 3, suffix: "", note: "Arenas cleared", icon: "trophy" },
   { label: "Creative Problem Solving", value: 100, suffix: "%", note: "Always on", icon: "spark" },
 ];
 
@@ -292,16 +313,22 @@ export const TERMINAL_COMMANDS: Record<string, string[]> = {
     "  whoami      → identify the protagonist",
     "  skills      → list core abilities",
     "  mission     → current objective",
+    "  experience  → guild training records",
     "  projects    → things I've built",
     "  contact     → open a channel",
     "  sudo hire   → initiate recruitment protocol",
     "  clear       → wipe the terminal",
   ],
-  whoami: ["Full-Stack Developer + Designer"],
+  whoami: ["B.Tech CSE student • Full-Stack Developer + Designer"],
   skills: ["React • JavaScript • Python • UI/UX • AI"],
   mission: ["Build meaningful digital experiences."],
+  experience: [
+    "UI/UX Design Intern — Finsentsis OS Pvt Ltd",
+    "Web Developer Intern — Averisix Solution",
+    "3 hackathons cleared • more quests incoming",
+  ],
   projects: ["[01] HealthGuard — health-tech platform", "[02] Huguen — hotel booking UI/UX", "→ scroll to PROJECTS for the full showcase"],
-  contact: ["email → priyanshu.dev@gmail.com", "github → github.com/priyanshukumar", "or use the transmission form below ↓"],
+  contact: ["email → priyanshukumar3000@gmail.com", "github → github.com/priyanshukumar3000", "or use the transmission form below ↓"],
   "sudo hire": [
     "[sudo] password for recruiter: ********",
     "ACCESS GRANTED ✦",

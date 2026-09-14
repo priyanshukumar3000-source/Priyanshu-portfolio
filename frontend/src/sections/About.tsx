@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { animate, motion, useInView, useMotionValue, useTransform } from "motion/react";
-import { Code2, Cpu, PenTool, Sparkles, Trophy } from "lucide-react";
-import { IMAGES, OWNER, STATS } from "@/data/portfolio";
+import { Code2, Cpu, PenTool, Sparkles, Trophy, Briefcase } from "lucide-react";
+import { EXPERIENCE, IMAGES, OWNER, STATS } from "@/data/portfolio";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { TiltCard } from "@/components/TiltCard";
@@ -108,6 +108,46 @@ export function About() {
                 );
               })}
             </div>
+            <Reveal delay={0.15}>
+              <p className="mt-12 mb-5 font-mono text-xs tracking-[0.3em] text-purple-400/90">
+                [FIELD_EXPERIENCE // INTERNSHIPS]
+              </p>
+              <div className="grid sm:grid-cols-2 gap-4" data-testid="experience-grid">
+                {EXPERIENCE.map((e) => (
+                  <TiltCard
+                    key={e.company}
+                    max={10}
+                    testId={`experience-card-${e.company.toLowerCase().replace(/[^a-z]+/g, "-")}`}
+                    className="glass-panel corner-brackets rounded-xl p-5 h-full transition-shadow duration-300 hover:shadow-[0_0_35px_rgba(34,211,238,0.2)]"
+                  >
+                    <p className="flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] text-cyan-300/80 mb-2">
+                      <Briefcase className="size-3.5" />
+                      {e.kind}
+                    </p>
+                    <h4 className="font-heading text-base font-bold text-white">{e.role}</h4>
+                    <p className="text-sm text-purple-300/90 mb-3">{e.company}</p>
+                    <ul className="space-y-1.5 mb-4">
+                      {e.points.map((pt) => (
+                        <li key={pt} className="flex items-start gap-2 text-xs text-purple-200/65 leading-relaxed">
+                          <span className="mt-1.5 size-1 shrink-0 rounded-full bg-purple-400" />
+                          {pt}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex flex-wrap gap-1.5">
+                      {e.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full border border-purple-500/25 px-2 py-0.5 font-mono text-[9px] tracking-[0.1em] text-purple-200/70"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </TiltCard>
+                ))}
+              </div>
+            </Reveal>
           </div>
         </div>
       </div>

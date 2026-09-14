@@ -4,6 +4,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Navbar } from "@/components/Navbar";
 import { Marquee } from "@/components/Marquee";
+import { CustomCursor } from "@/components/CustomCursor";
+import { EmberField } from "@/components/EmberField";
+import { ShurikenDivider } from "@/components/ShurikenDivider";
 import { Hero } from "@/sections/Hero";
 import { About } from "@/sections/About";
 import { Skills } from "@/sections/Skills";
@@ -22,6 +25,8 @@ export default function Home() {
   return (
     <div className="relative min-h-screen bg-[#08060e] text-[#f3f0fc]">
       <div className="noise-overlay" />
+      <CustomCursor />
+      <EmberField />
       <AnimatePresence>
         {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       </AnimatePresence>
@@ -34,9 +39,11 @@ export default function Home() {
         <About />
         <Skills />
         <Designer />
+        <ShurikenDivider />
         <Projects />
         <Hackathons />
         <Journey />
+        <ShurikenDivider />
         <DevMode />
         <Contact />
       </main>

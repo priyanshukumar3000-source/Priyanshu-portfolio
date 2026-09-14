@@ -70,6 +70,49 @@ function GlowRing({ radius, y, speed, color }: { radius: number; y: number; spee
   );
 }
 
+function Shuriken({ position }: { position: [number, number, number] }) {
+  const ref = useRef<THREE.Mesh>(null);
+  const geo = useMemo(() => {
+    const s = new THREE.Shape();
+    const pts: [number, number][] = [
+      [0, 1.15], [0.24, 0.24], [1.15, 0], [0.24, -0.24],
+      [0, -1.15], [-0.24, -0.24], [-1.15, 0], [-0.24, 0.24],
+    ];
+    s.moveTo(pts[0][0], pts[0][1]);
+    pts.slice(1).forEach(([px, py]) => s.lineTo(px, py));
+    s.closePath();
+    return new THREE.ExtrudeGeometry(s, { depth: 0.05, bevelEnabled: false });
+  }, []);
+  useFrame(({ clock }) => {
+    const m = ref.current;
+    if (!m) return;
+    m.rotation.z = clock.elapsedTime * 1.9;
+    m.rotation.x = Math.sin(clock.elapsedTime * 0.5) * 0.55;
+    m.position.y = position[1] + Math.sin(clock.elapsedTime * 0.8) * 0.3;
+  });
+  return (
+    <mesh ref={ref} geometry={geo} position={position}>
+      <meshStandardMaterial color="#c084fc" emissive="#9333ea" emissiveIntensity={1.7} wireframe />
+    </mesh>
+  );
+}
+
+function EnergyOrb({ position }: { position: [number, number, number] }) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    const m = ref.current;
+    if (!m) return;
+    const s = 1 + Math.sin(clock.elapsedTime * 2.4) * 0.18;
+    m.scale.setScalar(s);
+  });
+  return (
+    <mesh ref={ref} position={position}>
+      <sphereGeometry args={[0.28, 24, 24]} />
+      <meshBasicMaterial color="#e9d5ff" transparent opacity={0.85} />
+    </mesh>
+  );
+}
+
 function Rig({ children }: { children: React.ReactNode }) {
   const ref = useRef<THREE.Group>(null);
   useFrame(({ pointer }, d) => {
@@ -98,6 +141,10 @@ export function HeroScene() {
         <FloatingShape position={[4.8, -2.2, -2]} kind="octa" speed={0.7} color="#22d3ee" />
         <FloatingShape position={[-3.2, -2.6, -4]} kind="torus" speed={0.4} color="#7c3aed" />
         <FloatingShape position={[5.6, 2.6, -5]} kind="icosa" speed={0.6} color="#c084fc" />
+        <Shuriken position={[-5.4, 0.6, -1.2]} />
+        <Shuriken position={[6.2, -0.8, -3.5]} />
+        <EnergyOrb position={[-2.2, 2.8, -2]} />
+        <EnergyOrb position={[2.6, -2.9, -1]} />
         <GlowRing radius={2.6} y={0.2} speed={0.25} color="#a855f7" />
         <GlowRing radius={3.4} y={0.2} speed={-0.18} color="#22d3ee" />
       </Rig>

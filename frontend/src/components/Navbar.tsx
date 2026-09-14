@@ -53,6 +53,7 @@ export function Navbar() {
             className="font-heading font-extrabold tracking-tight text-white text-sm sm:text-base"
           >
             PK<span className="text-purple-400">://</span>EVOLVE
+            <span className="ml-1.5 text-purple-500/50 text-xs align-middle">忍</span>
           </button>
 
           <div className="hidden lg:flex items-center gap-1">
