@@ -2,6 +2,20 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MotionValue } from "motion/react";
 import * as THREE from "three";
+import { KatanaSlash, type SlashStrike } from "./KatanaSlash";
+import { StarTrail } from "./StarTrail";
+
+function useSceneMedia(query: string) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const update = () => setMatches(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, [query]);
+  return matches;
+}
 
 function easeOutBounce(x: number): number {
   const n1 = 7.5625;
@@ -212,7 +226,14 @@ function DropStar(props: DropProps & { landedZ: number }) {
   );
 }
 
-function DropKatana(props: DropProps) {
+interface KatanaProps extends DropProps {
+  hitTarget: React.RefObject<HTMLButtonElement | null>;
+  slashAction: React.MutableRefObject<(() => void) | null>;
+  onSlash: (strike: SlashStrike) => void;
+  reducedMotion: boolean;
+}
+
+function DropKatana(props: KatanaProps) {
   const group = useRef<THREE.Group>(null);
   const auraBlade = useRef<THREE.SpriteMaterial>(null);
   const auraGuard = useRef<THREE.SpriteMaterial>(null);
@@ -220,11 +241,42 @@ function DropKatana(props: DropProps) {
   const impactAt = useRef<number | null>(null);
   const auraTex = useMemo(makeAuraTexture, []);
   const worldPos = useMemo(() => new THREE.Vector3(), []);
+  const tipPos = useMemo(() => new THREE.Vector3(), []);
+  const guardPos = useMemo(() => new THREE.Vector3(), []);
+  const slashAt = useRef<number | null>(null);
   const mouse = useRef({ x: -9999, y: -9999 });
   const flare = useRef(0);
   const { camera, gl } = useThree();
+  const { hitTarget, slashAction, onSlash, active, reducedMotion } = props;
 
   useDropMotion(group, props, -1.05, 0.3, impactAt);
+
+  useEffect(() => {
+    slashAction.current = () => {
+      const g = group.current;
+      const now = performance.now();
+      if (!active || !g?.visible || impactAt.current === null || (slashAt.current !== null && now - slashAt.current < 900)) return;
+      const rect = gl.domElement.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+      g.updateWorldMatrix(true, false);
+      g.localToWorld(guardPos.set(0, 0.58, 0)).project(camera);
+      g.localToWorld(tipPos.set(0, 3.22, 0)).project(camera);
+      const x = rect.left + (guardPos.x + 1) * rect.width / 2;
+      const y = rect.top + (1 - guardPos.y) * rect.height / 2;
+      const dx = (tipPos.x - guardPos.x) * rect.width / 2;
+      const dy = (guardPos.y - tipPos.y) * rect.height / 2;
+      slashAt.current = now;
+      onSlash({ at: now, x, y, radius: Math.hypot(dx, dy), angle: Math.atan2(dy, dx) });
+    };
+    return () => { slashAction.current = null; };
+  }, [active, camera, gl, guardPos, tipPos, onSlash, slashAction]);
+
+  useEffect(() => {
+    if (!active) slashAt.current = null;
+    const target = hitTarget.current;
+    return () => { if (target) target.hidden = true; };
+  }, [active, hitTarget]);
+  useEffect(() => () => auraTex.dispose(), [auraTex]);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -238,17 +290,44 @@ function DropKatana(props: DropProps) {
     const g = group.current;
     if (!g) return;
     const vis = g.visible ? 1 : 0;
+    const elapsed = slashAt.current === null ? 1 : (performance.now() - slashAt.current) / 1000;
+    const slashing = elapsed < 0.9;
+    if (slashing && !reducedMotion) {
+      const sweep = elapsed < 0.065 ? -0.12 * elapsed / 0.065
+        : elapsed < 0.32 ? THREE.MathUtils.lerp(-0.12, Math.PI * 7 / 6, 1 - (1 - (elapsed - 0.065) / 0.255) ** 3)
+        : Math.PI * 7 / 6 * (1 - THREE.MathUtils.smoothstep(elapsed, 0.5, 0.9));
+      g.rotation.z = -1.05 - sweep;
+      g.rotation.y = THREE.MathUtils.damp(g.rotation.y, 0, 22, d);
+    }
 
-    g.getWorldPosition(worldPos);
-    worldPos.y += 1.4;
-    worldPos.project(camera);
+    g.updateWorldMatrix(true, false);
+    g.localToWorld(worldPos.set(0, 1.9, 0)).project(camera);
+    g.localToWorld(guardPos.set(0, 0.58, 0)).project(camera);
+    g.localToWorld(tipPos.set(0, 3.22, 0)).project(camera);
     const rect = gl.domElement.getBoundingClientRect();
     const sx = rect.left + ((worldPos.x + 1) / 2) * rect.width;
     const sy = rect.top + ((1 - worldPos.y) / 2) * rect.height;
+    const target = hitTarget.current;
+    if (target) {
+      target.hidden = !active || !g.visible || impactAt.current === null;
+      target.disabled = slashing || target.hidden;
+      target.dataset.state = target.hidden ? "landing" : slashing ? "slashing" : "ready";
+      if (!target.hidden && !slashing) {
+        const dx = (tipPos.x - guardPos.x) * rect.width / 2;
+        const dy = (guardPos.y - tipPos.y) * rect.height / 2;
+        const angle = Math.atan2(dx, -dy);
+        target.style.left = `${(worldPos.x + 1) * rect.width / 2}px`;
+        target.style.top = `${(1 - worldPos.y) * rect.height / 2}px`;
+        target.style.height = `${Math.hypot(dx, dy) + 28}px`;
+        target.style.transform = `translate(-50%, -50%) rotate(${angle}rad)`;
+        target.style.setProperty("--katana-angle", `${angle}rad`);
+      }
+    }
     const dist = Math.hypot(mouse.current.x - sx, mouse.current.y - sy);
-    flare.current = THREE.MathUtils.damp(flare.current, dist < 180 ? 1 : 0, 6, d);
+    flare.current = THREE.MathUtils.damp(flare.current, dist < 180 || target === document.activeElement ? 1 : 0, 6, d);
 
-    const boost = 1 + flare.current * 1.7;
+    const strikeGlow = slashing ? Math.sin(Math.min(1, elapsed / 0.9) * Math.PI) * (reducedMotion ? 0.5 : 2) : 0;
+    const boost = 1 + flare.current * 1.7 + strikeGlow;
     const pulse = 0.55 + Math.sin(clock.elapsedTime * 3.2) * 0.25;
     if (auraBlade.current) auraBlade.current.opacity = pulse * 0.55 * vis * boost;
     if (auraGuard.current) auraGuard.current.opacity = pulse * 0.8 * vis * boost;
@@ -302,69 +381,107 @@ function DropKatana(props: DropProps) {
   );
 }
 
-function OrbitStar({ progress }: { progress: MotionValue<number> }) {
+function OrbitStar({ progress, active, reducedMotion }: { progress: MotionValue<number>; active: boolean; reducedMotion: boolean }) {
   const ref = useRef<THREE.Group>(null);
   const aura = useRef<THREE.SpriteMaterial>(null);
   const geo = useMemo(makeStarGeo, []);
   const auraTex = useMemo(makeAuraTexture, []);
+  const orbitAngle = useRef<number | null>(null);
+  useEffect(() => () => { geo.dispose(); auraTex.dispose(); }, [geo, auraTex]);
   useFrame(({ clock }, d) => {
     const g = ref.current;
     if (!g) return;
-    const a = progress.get() * Math.PI * 3 + clock.elapsedTime * 0.12;
+    const targetAngle = progress.get() * Math.PI * 3 + clock.elapsedTime * 0.3;
+    orbitAngle.current = reducedMotion ? 0.9 : orbitAngle.current === null ? targetAngle
+      : THREE.MathUtils.damp(orbitAngle.current, targetAngle, 7, d);
+    const a = orbitAngle.current;
     const z = Math.sin(a + Math.PI / 3) * 1.6 - 0.4;
     g.position.set(Math.cos(a) * 4.4, Math.sin(a) * 2.4 - 0.2, z);
     const depth = THREE.MathUtils.mapLinear(z, -2, 1.2, 0.6, 1.1);
     g.scale.setScalar(depth);
-    g.rotation.z += d * 4.5;
-    g.rotation.x = Math.sin(clock.elapsedTime * 0.8) * 0.4;
-    if (aura.current) aura.current.opacity = 0.5 + Math.sin(clock.elapsedTime * 2.5) * 0.2;
-  });
+    if (!reducedMotion) g.rotation.z += d * 4.5;
+    g.rotation.x = reducedMotion ? 0 : Math.sin(clock.elapsedTime * 0.8) * 0.4;
+    if (aura.current) aura.current.opacity = reducedMotion ? 0.4 : 0.5 + Math.sin(clock.elapsedTime * 2.5) * 0.2;
+  }, -2);
   return (
-    <group ref={ref}>
-      <sprite position={[0, 0, -0.2]} scale={[2.6, 2.6, 1]}>
-        <spriteMaterial ref={aura} map={auraTex} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={0.4} />
-      </sprite>
-      <mesh geometry={geo}>
-        <meshStandardMaterial color="#c9c9de" metalness={0.75} roughness={0.3} emissive="#a855f7" emissiveIntensity={0.5} />
-      </mesh>
-    </group>
+    <>
+      <group ref={ref}>
+        <sprite position={[0, 0, -0.2]} scale={[2.6, 2.6, 1]}>
+          <spriteMaterial ref={aura} map={auraTex} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={0.4} />
+        </sprite>
+        <mesh geometry={geo}>
+          <meshStandardMaterial color="#c9c9de" metalness={0.75} roughness={0.3} emissive="#a855f7" emissiveIntensity={0.5} />
+        </mesh>
+      </group>
+      {!reducedMotion && <StarTrail target={ref} active={active} />}
+    </>
   );
 }
 
-export function OrbitStarScene({ progress }: { progress: MotionValue<number> }) {
-  const [enabled] = useState(() => window.matchMedia("(min-width: 768px)").matches);
+export function OrbitStarScene({ progress, active }: { progress: MotionValue<number>; active: boolean }) {
+  const enabled = useSceneMedia("(min-width: 768px)");
+  const reducedMotion = useSceneMedia("(prefers-reduced-motion: reduce)");
   if (!enabled) return null;
   return (
     <Canvas
+      data-testid="skills-star-trail-scene"
+      data-trail={reducedMotion ? "reduced-motion" : active ? "active" : "paused"}
+      frameloop={active ? "always" : "never"}
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 9], fov: 55 }}
       gl={{ antialias: true, alpha: true }}
-      style={{ background: "transparent" }}
+      style={{ background: "transparent", pointerEvents: "none" }}
     >
       <ambientLight intensity={0.5} />
       <pointLight position={[4, 3, 4]} intensity={25} color="#a855f7" />
-      <OrbitStar progress={progress} />
+      <OrbitStar progress={progress} active={active} reducedMotion={reducedMotion} />
     </Canvas>
   );
 }
 
 export function WeaponRain({ active }: { active: boolean }) {
-  const [enabled] = useState(() => window.matchMedia("(min-width: 768px)").matches);
+  const enabled = useSceneMedia("(min-width: 768px)");
+  const reducedMotion = useSceneMedia("(prefers-reduced-motion: reduce)");
+  const hitTarget = useRef<HTMLButtonElement>(null);
+  const slashAction = useRef<(() => void) | null>(null);
+  const [strike, setStrike] = useState<SlashStrike | null>(null);
+  useEffect(() => {
+    if (!strike) return;
+    const timeout = window.setTimeout(() => setStrike(null), 900);
+    return () => window.clearTimeout(timeout);
+  }, [strike]);
+  useEffect(() => { if (!active || !enabled) setStrike(null); }, [active, enabled]);
   if (!enabled) return null;
   return (
-    <Canvas
-      dpr={[1, 1.5]}
-      camera={{ position: [0, 0, 9], fov: 55 }}
-      gl={{ antialias: true, alpha: true }}
-      style={{ background: "transparent" }}
-    >
-      <ambientLight intensity={0.55} />
-      <pointLight position={[5, 4, 4]} intensity={30} color="#a855f7" />
-      <pointLight position={[-5, -3, 3]} intensity={18} color="#22d3ee" />
-      <DropStar active={active} delay={0} start={[-2.8, 7.5, -1]} end={[-2.7, 1.9, -1]} landedZ={0.4} />
-      <DropStar active={active} delay={0.3} start={[-3.0, 8.5, -1.6]} end={[-2.9, -2.0, -1.6]} landedZ={-0.5} />
-      <DropStar active={active} delay={0.55} start={[3.0, 8, -1.8]} end={[2.9, 1.5, -1.8]} landedZ={0.9} />
-      <DropKatana active={active} delay={0.85} start={[2.7, 9, -0.6]} end={[2.6, -1.0, -0.6]} />
-    </Canvas>
+    <>
+      <Canvas
+        dpr={[1, 1.5]}
+        camera={{ position: [0, 0, 9], fov: 55 }}
+        gl={{ antialias: true, alpha: true }}
+        style={{ background: "transparent", pointerEvents: "none" }}
+      >
+        <ambientLight intensity={0.55} />
+        <pointLight position={[5, 4, 4]} intensity={30} color="#a855f7" />
+        <pointLight position={[-5, -3, 3]} intensity={18} color="#22d3ee" />
+        <DropStar active={active} delay={0} start={[-2.8, 7.5, -1]} end={[-2.7, 1.9, -1]} landedZ={0.4} />
+        <DropStar active={active} delay={0.3} start={[-3.0, 8.5, -1.6]} end={[-2.9, -2.0, -1.6]} landedZ={-0.5} />
+        <DropStar active={active} delay={0.55} start={[3.0, 8, -1.8]} end={[2.9, 1.5, -1.8]} landedZ={0.9} />
+        <DropKatana active={active} delay={0.85} start={[2.7, 9, -0.6]} end={[2.6, -1.0, -0.6]}
+          hitTarget={hitTarget} slashAction={slashAction} onSlash={setStrike} reducedMotion={reducedMotion} />
+      </Canvas>
+      <button
+        ref={hitTarget}
+        type="button"
+        hidden
+        data-testid="about-katana-slash-button"
+        data-state="landing"
+        aria-label="Slash with the About katana"
+        className="katana-hit-target"
+        onClick={() => slashAction.current?.()}
+      >
+        <span className="katana-hit-label" aria-hidden="true" data-testid="katana-slash-hint">CLICK TO SLASH</span>
+      </button>
+      {strike && <KatanaSlash key={strike.at} strike={strike} reducedMotion={reducedMotion} />}
+    </>
   );
 }

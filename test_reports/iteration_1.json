@@ -1,0 +1,49 @@
+{
+  "summary": "Frontend-only test of Katana Slash-On-Click (About) and Skills Star Trail on a React19+Vite portfolio. Verified click + keyboard slash, cooldown, cleanup, mobile gating, resize behavior, orbit star trail pause/resume, and console cleanliness. Uncovered a HIGH-priority accessibility bug: prefers-reduced-motion is not honored (slash SVG, content shake, and star trail all still activate when the media query is set to reduce).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "KatanaSlash + StarTrail (WeaponRain reducedMotion propagation)",
+        "issue": "prefers-reduced-motion: reduce is NOT respected. With window.matchMedia('(prefers-reduced-motion: reduce)').matches === true, clicking the katana still renders the 210deg SVG slash arc (data-testid=about-katana-slash) AND runs the WAAPI 260ms shake on [data-testid=portfolio-content]. The Skills scene data-trail attribute reports 'active' instead of 'reduced-motion' and the moving star trail is still rendered. Expected per spec: no slash SVG, no shake, static orbit star with only aura pulse.",
+        "selector": "[data-testid=about-katana-slash], [data-testid=skills-star-trail-scene][data-trail=reduced-motion]",
+        "priority": "HIGH"
+      },
+      {
+        "component": "WeaponRain / About katana hit target",
+        "issue": "On a common 1440x900 desktop viewport, after clicking nav-link-about, the katana hit-button center projects near y=902 (just below the viewport). elementFromPoint at button center returns null and real pointer clicks miss until the user scrolls farther. Only keyboard focus works from that resting position. Consider raising the katana projected midpoint (or repositioning the hit target closer to the visible blade) so the CTA is reachable without extra scrolling.",
+        "selector": "[data-testid=about-katana-slash-button]",
+        "priority": "MEDIUM"
+      },
+      {
+        "component": "katana-hit-label (CLICK TO SLASH hint)",
+        "issue": "Hint is legible in most scroll positions, but because it is positioned at top:-28px relative to the button and rotated to match the katana angle, when the katana finishes its landing rotation the label can drift over the middle-right of the portrait or into the gap between stat cards. Not clipped by a stat card in current tests, but position is volatile as the katana idles/bobs. Recommend anchoring the hint below the blade or clamping to a stable offset.",
+        "selector": "[data-testid=katana-slash-hint]",
+        "priority": "LOW"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/frontend/tests/weapon_interactions.spec.md"],
+  "action_items": [
+    "Fix reduced-motion gating: verify useReducedMotion() from motion/react actually returns true on this build (React19 + motion). Consider a direct window.matchMedia('(prefers-reduced-motion: reduce)') fallback with change listener, then pass through to both KatanaSlash (skip SVG + skip shake) and OrbitStar/StarTrail (skip trail mount, static aura). The current !!useReducedMotion() coercion never becomes true in the running preview even though matchMedia reports reduce=true.",
+    "Reposition the katana hit-target so its center sits inside a typical 900px-tall desktop viewport after nav-link-about scroll (e.g., raise projected midpoint or scroll the target into view on activation).",
+    "Consider moving/pinning the CLICK TO SLASH hint below the blade to guarantee it never overlaps portrait/stat content while the katana idles."
+  ],
+  "critical_code_review_comments": [
+    "WeaponRain.tsx L249: reducedMotion is derived once via useReducedMotion() and passed down, but if motion/react's hook returns null->false transiently on this Vite/React19 setup, the accessibility contract silently breaks. Add a media-query effect fallback and log a runtime check.",
+    "KatanaSlash.tsx L15: document.querySelector('[data-testid=portfolio-content]') is called inside an effect on every strike; consider passing the ref/target from the parent to avoid coupling and to make the shake target testable.",
+    "WeaponRain.tsx button hit target uses inline style.left/top/height/transform updates every frame; this is fine but the button width/height varies (85-186px observed) which makes automated pointer-click tests brittle. Consider a fixed minimum hit area (e.g., min-height) independent of blade projection length.",
+    "StarTrail.tsx correctly caps to 64 samples and 2.1s lifetime, and geo/aura disposals present. OrbitStarScene frameloop toggles by active, which is good for perf.",
+    "Reduced-motion CSS at .katana-slash-overlay { display:none } is a nice belt-and-suspenders, but the SVG is still portalled and shake still runs; ensure both JS-side gates work regardless of CSS."
+  ],
+  "updated_files": ["/app/frontend/tests/weapon_interactions.spec.md"],
+  "success_rate": {"backend": "N/A", "frontend": "80%"},
+  "seed_data_creation": "None",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Preview URL: https://anime-code-1.preview.emergentagent.com. Loading screen ~6-7s, then katana drop lands ~2s after About in-view. Key test IDs verified live: about-katana-slash-button (data-state landing/ready/slashing), about-katana-slash (portal SVG on body during ~900ms), katana-slash-hint, portfolio-content (shake target), skills-star-trail-scene (data-trail active/paused/reduced-motion). Use page.mouse.click at bounding_box center (element bobs; locator.click may wait for stability). Button is not mounted below 768px. When re-testing reduced-motion, set page.emulate_media(reduced_motion='reduce') BEFORE page load; verified matchMedia reports reduce=true in the preview. Skills 'paused' happens when About/Home is in view (useInView active=false).",
+  "test_credentials": "None. Public portfolio.",
+  "rca of the issue": "Reduced-motion bug RCA: The app relies solely on useReducedMotion() from 'motion/react' (line 3 WeaponRain.tsx, line 422 OrbitStarScene, line 443 WeaponRain). Live probe via window.matchMedia('(prefers-reduced-motion: reduce)').matches returned true, yet the DOM shows the slash SVG rendered and skills scene data-trail='active'. This indicates the hook return value is still falsy at render/click time on React19 + Vite. Mitigation: replace with (or augment) a native useSyncExternalStore/useEffect that subscribes to window.matchMedia('(prefers-reduced-motion: reduce)') and re-renders on 'change'; pass the derived boolean through the same reducedMotion prop chain."
+}

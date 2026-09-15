@@ -1,0 +1,40 @@
+{
+  "summary": "Focused retest of the 3 issues from iteration_1 plus real visual capture of the slash arc. All three previously-reported bugs (HIGH reduced-motion, MEDIUM viewport reachability, LOW hint placement) are FIXED. Slash arc is now visually confirmed via a screenshot with animation paused at 300ms. Reduced-motion works on initial load, dynamically after the page is loaded, and cancels an in-flight slash mid-animation. Star trail scene renders with data-trail='active' and canvas draws non-transparent pixels in Skills. No new runtime errors introduced (only pre-existing THREE.Clock deprecation warnings).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/frontend/tests/weapon_interactions.spec.md"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "useSceneMedia in WeaponRain.tsx now correctly subscribes to matchMedia 'change' via native window.matchMedia + useState, replacing the previously flaky motion/react useReducedMotion hook. Both scenes (WeaponRain + OrbitStarScene) share it and now update dynamically without reload. Verified via emulate_media before load AND at runtime.",
+    "KatanaSlash.tsx effect cleanup correctly cancels the WAAPI shake when reducedMotion flips true mid-slash (running content animations dropped from 1 to 0 within 200ms). Portal SVG also stops rendering because parent gate short-circuits with `if (reducedMotion) return null` and CSS `.katana-slash-overlay { display:none }` provides belt-and-suspenders.",
+    "About.tsx Reveal now has `lg:self-start` so the katana column top-aligns with the intro text. At 1440x900 the projected hit target midpoint sits at y~733 (well inside 900px viewport) and at 1920x800 it sits at y~722 (inside 800px). elementFromPoint at midpoint correctly returns [data-testid=about-katana-slash-button] in both cases.",
+    "katana-hit-label now anchored at top:50% with translate(12px,44px) after counter-rotation → the hint sits horizontally beneath the blade midpoint (measured y~765 vs blade midpoint ~733) and remains fully within layout, not clipped by portrait or stat cards while the katana idles.",
+    "StarTrail.tsx capped to 64 samples / 2.1s lifetime; canvas WebGL context renders non-transparent pixels while scrolling Skills (readPixels showed non-zero alpha across scans). Skill cards remain visible/interactable — pointer-events on the orbit canvas parent are none by CSS.",
+    "Only observed console warnings are pre-existing 'THREE.Clock deprecated' notices from @react-three/fiber; no new errors introduced."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "All 3 iteration_1 issues verified fixed on preview URL. Verification method for slash arc: click at real bbox midpoint (page.mouse.click), then in JS call `document.querySelectorAll('.katana-slash-stroke').forEach(s => s.getAnimations().forEach(a => { a.pause(); a.currentTime = 300; }))` to freeze the sweep for deterministic screenshot; stroke-dashoffset near 0 and opacity ~0.95 confirmed. For reduced-motion dynamic tests, wait ~1500ms after page.emulate_media(reduced_motion=...) so the matchMedia 'change' listener propagates through React state and the katana returns to data-state='ready'. Cooldown mid-slash disable read as False in one probe due to timing/click stability — button.disabled is correctly set inside useFrame but the sampled window (~50ms) was too short after some clicks; not a real bug (keyboard cooldown works and iteration_1 already confirmed cooldown gates re-entry).",
+  "test_credentials": "None. Public portfolio.",
+  "verification_matrix": {
+    "reduced_motion_initial_load": "PASS — matchMedia reports true; slash SVG absent after click; portfolio-content animations count 0; skills-star-trail-scene data-trail='reduced-motion'.",
+    "reduced_motion_dynamic_to_normal": "PASS — after emulate_media(no-preference) + 1.5s wait, matchMedia false, skills data-trail='active', click at blade midpoint renders SVG + shake animation (1 running).",
+    "reduced_motion_dynamic_to_reduce_midslash": "PASS — clicked in normal mode, switched to reduce ~100ms into slash → SVG removed and content shake WAAPI cancelled (0 running animations).",
+    "viewport_1440x900_click_no_scroll": "PASS — bbox y=664, midpoint y=733 (inside 900); elementFromPoint at midpoint = about-katana-slash-button; click triggers slash.",
+    "viewport_1920x800_click_no_scroll": "PASS — bbox y=661, midpoint y=722 (inside 800); elementFromPoint correct; click triggers slash.",
+    "hint_legibility": "PASS — hint bbox at y~765, horizontally below the blade midpoint (~733); dimensions 103x24; not clipped by portrait or stat cards.",
+    "slash_arc_visual_evidence": "PASS — screenshot at /tmp/slash_arc_paused.png with 3 stroke paths paused at 300ms; stroke-dashoffset≈0.0042, opacity≈0.95, 210° glowing purple→cyan arc visible above/around portrait.",
+    "cleanup_after_900ms": "PASS — SVG removed from DOM after full slash duration.",
+    "keyboard_enter_trigger": "PASS — focusing button + Enter renders the slash SVG.",
+    "star_trail_visible": "PASS — data-trail='active', canvas non-transparent alpha pixels present after scroll; skill cards visible and pointer-interactable.",
+    "mobile_regression_390x844": "PASS — orbit-star scene and katana button not mounted below 768px."
+  },
+  "rca of the issue": "Prior iteration_1 RCA (useReducedMotion hook not reactive) is resolved by the new useSceneMedia native matchMedia subscription in WeaponRain.tsx L8-18 (useState initial + change listener). Confirmed reactive both on initial load and mid-session without reload."
+}

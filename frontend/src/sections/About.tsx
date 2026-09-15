@@ -51,7 +51,7 @@ export function About() {
         />
 
         <div className="grid lg:grid-cols-[1fr_1.2fr] gap-14 items-center">
-          <Reveal className="relative mx-auto w-[min(380px,80vw)]">
+          <Reveal className="relative mx-auto w-[min(380px,80vw)] lg:self-start">
             <div className="pointer-events-none absolute -inset-x-56 -inset-y-24 z-0 hidden md:block" data-testid="weapon-rain-canvas">
               <WeaponRain active={inView} />
             </div>

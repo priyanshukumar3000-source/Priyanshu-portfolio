@@ -35,7 +35,7 @@ export default function Home() {
 
       {!loading && <Navbar />}
 
-      <main>
+      <main data-testid="portfolio-content">
         <Hero />
         <Marquee />
         <About />

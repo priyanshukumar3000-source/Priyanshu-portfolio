@@ -22,9 +22,19 @@ Premium, highly interactive 3D personal portfolio presenting Priyanshu Kumar as 
 - Verified: typecheck clean, API smoke (POST persists, GET lists, 422 negative), full browser pass incl. mobile 390px
 
 ## Backlog
-- P0: Real hackathon event names/results (3 confirmed); real project demo/case-study URLs
-- P1: Project case-study detail pages; resume/CV download; Instagram link if wanted
-- P2: BGM ambient loop option; blog/guestbook; WebGL shader hero variant; i18n (JP accents)
+- P0: No blockers for the requested weapon interactions. Huguen demo/case-study URLs remain placeholders pending real links; actual hackathon ranks/results need owner confirmation (four event names already populated).
+- P1: Project case-study detail pages; resume/CV download; broader mobile performance audit of existing Sakura Storm/WeaponRain effects.
+- P2: Site-wide accessibility review (new weapon controls already support keyboard and reduced motion); BGM ambient loop option; blog/guestbook; WebGL shader hero variant; i18n (JP accents); Instagram link if wanted.
+- SEO/Open Graph metadata and a working navbar sound toggle are ALREADY implemented, verified in source during this continuation. Do not rebuild them based on the stale handoff summary.
+
+## Latest request — weapon interactions (2026-07)
+- User: "Slash On Click: Let visitors click the About katana to trigger a full slash arc with a screen shake" and "Star Trails: Add a fading comet trail behind the orbiting ninja star in Skills".
+- Completed: native keyboard-accessible, screen-projected katana hit target; 210-degree luminous slash SVG above the portrait, physical katana swing, 260ms decaying content shake, 900ms repeat-click cooldown, replay and cleanup. A horizontal click hint sits below the blade; portrait now top-aligns with intro so the katana is reachable after About navigation.
+- Completed: connected world-space violet/cyan comet ribbon behind Skills' orbiting star. Fixed 64-sample history, 2.1s fading lifetime, tapered width, smooth scroll-linked orbit, offscreen pausing and history reset. Uses existing WebGL canvas, no new service or integration.
+- Accessibility/performance: native matchMedia subscriptions respond to reduced-motion and viewport changes live. Reduced motion replaces slash/shake with a gentle aura pulse and makes Skills' star static without a moving trail. Both enhanced weapon scenes unmount below 768px, preserving the existing desktop-only policy.
+- Architecture additions: `components/three/KatanaSlash.tsx` owns portalled SVG and cancellable content shake; `components/three/StarTrail.tsx` owns bounded ribbon geometry. `WeaponRain.tsx` owns interaction/media state; Skills provides viewport visibility; Home main has `portfolio-content` test ID. No backend or authentication changes.
+- Testing: `yarn run tsc -b --noEmit` passes; lint has zero errors (four pre-existing warnings). Frontend testing reports `/app/test_reports/iteration_1.json` and `/app/test_reports/iteration_2.json`: all three issues from first pass fixed; final pass reports 100%, no outstanding UI bugs. Verified real blade clicks at 1440x900 and 1920x800, visible arc, shake/cooldown/cleanup, keyboard, trail, mobile gating and dynamic reduced-motion changes including mid-slash cancellation.
+- User verification pending: click the About katana and scroll through Skills in desktop preview. No mocked behavior was introduced. Next optional enhancements: a slash whoosh respecting the existing mute toggle; richer project stories; resume download once a PDF is supplied.
 
 ## Iteration log
 - 2026-09-14 (v2): Real identity wired (email, GitHub, LinkedIn, B.Tech CSE bio, 2 internships, 3 hackathons). Shinobi FX pack: 3D spinning shuriken + pulsing energy orbs in hero scene, site-wide rising ember canvas, custom neon cursor with spring ring, kanji watermarks per section (忍技美創闘道端絆), spinning shuriken dividers, new `experience` terminal command. Typecheck + browser pass clean.

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll } from "motion/react";
+import { motion, useInView, useScroll } from "motion/react";
 import { Hexagon } from "lucide-react";
 import { OrbitStarScene } from "@/components/three/WeaponRain";
 import { SKILL_GROUPS } from "@/data/portfolio";
@@ -9,13 +9,14 @@ import { TiltCard } from "@/components/TiltCard";
 
 export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { margin: "100px" });
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
 
   return (
     <section ref={sectionRef} id="skills" data-testid="skills-section" className="relative py-28 md:py-36">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(147,51,234,0.08),transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 z-20" data-testid="orbit-star-canvas">
-        <OrbitStarScene progress={scrollYProgress} />
+        <OrbitStarScene progress={scrollYProgress} active={inView} />
       </div>
       <div className="relative z-10 mx-auto w-[min(1240px,92vw)]">
         <SectionHeading
